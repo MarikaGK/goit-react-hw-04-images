@@ -3,7 +3,6 @@ import '../styles.css';
 import { emptyQueryNotify, errorOccured } from '../utils/notifications';
 import SearchBar from './SearchBar/SearchBar';
 import ImageGallery from './ImageGallery/ImageGallery';
-import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 import Modal from './Modal/Modal';
 import Button from './Button/Button';
 import getImages from 'utils/getImages';
@@ -27,11 +26,11 @@ class App extends Component {
     this.setState({ hasError: true });
   }
 
-  handleSearchBar = ({ query }) => {
+  handleSearchBar = (query) => {
     if (!query) {
       return emptyQueryNotify();
     }
-    this.setState(prevState => ({ ...prevState, query, actualPage: 1 }));
+    this.setState({ query, actualPage: 1 });
   };
 
   onGalleryItemClick = evt => {
@@ -46,19 +45,13 @@ class App extends Component {
     }));
   };
 
-  closeModalOnEsc = evt => {
-    if (evt.key === 'Escape') {
-      this.setState({ isModalOpen: false });
-    }
-  };
+onModalClose = () => {
+  this.setState({ isModalOpen: false });
+}
 
-  closeModalOnOverlayClick = evt => {
-    if (evt.target.name !== 'img') {
-      this.setState({ isModalOpen: false });
-    }
-  };
+  
 
-  async componentDidUpdate(_prevProps, prevState) {
+  componentDidUpdate(_prevProps, prevState) {
     const { query, actualPage, images, perPage } = this.state;
     if (prevState.query !== query || prevState.actualPage !== actualPage) {
       this.setState({ isLoading: true });
@@ -91,17 +84,12 @@ class App extends Component {
     return (
       <>
         <SearchBar onNewQuery={this.handleSearchBar} />
-        <ImageGallery>
-          {isLoading && <Loader />}
-          {!hasError ? (
-            <ImageGalleryItem
-              images={images}
-              onClick={this.onGalleryItemClick}
-            />
-          ) : (
-            errorOccured()
-          )}
-        </ImageGallery>
+        {isLoading && <Loader />}
+        {!hasError ? (
+          <ImageGallery images={images} onClick={this.onGalleryItemClick} />
+        ) : (
+          errorOccured()
+        )}
         {actualPage !== totalPages && images.length > 0 && !isLoading ? (
           <Button onClick={this.incrementPage} />
         ) : null}
@@ -109,8 +97,7 @@ class App extends Component {
           <Modal
             imgSrc={modalURL}
             alt={query}
-            closeModalOnEsc={this.closeModalOnEsc}
-            closeModalOnOverlayClick={this.closeModalOnOverlayClick}
+            onModalClose={this.onModalClose}
           />
         )}
       </>

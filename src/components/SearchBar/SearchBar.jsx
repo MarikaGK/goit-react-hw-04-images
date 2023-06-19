@@ -7,7 +7,7 @@ class SearchBar extends Component {
     evt.preventDefault();
     const formDOM = evt.currentTarget;
     const query = formDOM.elements.search.value.trim();
-    this.props.onNewQuery({ query });
+    this.props.onNewQuery(query);
   };
 
   render() {
