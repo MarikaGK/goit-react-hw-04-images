@@ -1,16 +1,16 @@
-import PropTypes from 'prop-types';
 import css from './Button.module.css';
+import { useImageGallery } from 'providers/ImageGalleryProvider';
 
-const Button = ({ onClick }) => (
-  <div className={css.ButtonWrapper}>
-    <button type="button" className={css.Button} onClick={onClick}>
-      Load more
-    </button>
-  </div>
-);
+const Button = () => {
+  const { incrementPage } = useImageGallery();
+
+  return (
+    <div className={css.ButtonWrapper}>
+      <button type="button" className={css.Button} onClick={incrementPage}>
+        Load more
+      </button>
+    </div>
+  );
+};
 
 export default Button;
-
-Button.propTypes = {
-  onClick: PropTypes.func,
-};
